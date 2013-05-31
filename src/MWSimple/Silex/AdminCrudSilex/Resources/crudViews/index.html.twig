@@ -1,0 +1,53 @@
+{% extends "crudViews/layout.html.twig" %}
+
+{% block title %}
+{{ parent() }} - {{ 'views.index.list'|trans({'%entity%': options.table}, 'MWSimpleAdminCrudSilex') }}
+{% endblock %}
+
+{% block page %}
+<div class="row">
+    <div class="span8">
+        <h1>{{ 'views.index.list'|trans({'%entity%': options.table}, 'MWSimpleAdminCrudSilex') }}</h1>
+    </div>
+
+    <div class="span12">
+        <table class="table table-striped table-bordered table-condensed">
+            <thead>
+            <tr>
+              {% for campo in campos %}
+                <th>{{ campo }}</th>
+              {% endfor %}
+                <th>Actions</th>
+            </tr>
+        </thead>
+            <tbody>
+        {% for entity in entities %}
+            <tr>
+              {% for campo in campos %}
+                <td>{{ entity[campo] }}</td>
+              {% endfor %}
+                <td>
+                    <div class="navbar">
+                        <ul class="nav nav-pills">
+                            <li>
+                                <a href="{{ path(options.route ~ '_show', { 'id': entity.id }) }}" class="btn btn-mini">show</a>
+                            </li>
+                            <li>
+                                <a href="{{ path(options.route ~ '_edit', { 'id': entity.id }) }}" class="btn btn-mini">edit</a>
+                            </li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+    </div>
+
+        <div class="span8">
+        <a class="btn btn-primary likepaginator" href="{{ path(options.route ~ '_new') }}">
+            {{ 'views.index.createnew'|trans({}, 'MWSimpleAdminCrudSilex') }} Item
+        </a>
+    </div>
+    </div>
+{% endblock %}

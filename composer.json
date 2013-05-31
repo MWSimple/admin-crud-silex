@@ -1,0 +1,25 @@
+{
+    "name": "mwsimple/admin-crud-silex",
+    "description": "Admin Crud Silex",
+    "keywords": ["crud", "generator", "silex", "bootstrap", "doctrine", "orm"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Gonzalo Alonso",
+            "email": "gonkpo@gmail.com"
+        }
+    ],
+    "require": {
+        "doctrine/dbal": "2.2.*"
+    },
+    "autoload": {
+	    "psr-0": {
+            "MWSimple\\Silex\\AdminCrudSilex": "src/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.2.x-dev"
+        }
+    }
+}
