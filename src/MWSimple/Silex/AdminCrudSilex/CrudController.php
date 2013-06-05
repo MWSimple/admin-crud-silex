@@ -18,8 +18,10 @@ class CrudController
 
     public function indexAction()
     {
-        $sql = "SELECT * FROM ".$this->options['table'];
-        $entities = $this->app['db']->fetchAll($sql);
+        $db = $this->app['db'];
+        $table = $this->options['table'];
+        $sql = "SELECT * FROM $table";
+        $entities = $db->fetchAll($sql);
 
         $list = configController::createList($this->options['table']);
 
@@ -32,8 +34,7 @@ class CrudController
 
     public function newAction()
     {
-        $entity = new $this->class();
-        $form = configController::createForm($this->options['table'], $this->app, $entity);
+        $form = configController::createForm($this->options['table'], $this->app);
         // display the form
         return $this->app['twig']->render($this->options['dirTemplate'].'new.html.twig', array(
             'form' => $form->createView(),
@@ -43,19 +44,20 @@ class CrudController
 
     public function createAction(Request $request)
     {
-        $entity = new $this->class();
-        $form = configController::createForm($this->options['table'], $this->app, $entity);
+        $db = $this->app['db'];
+        $table = $this->options['table'];
+        $form = configController::createForm($table, $this->app);
 
         if ('POST' == $request->getMethod()) {
             $form->bind($request);
 
             if ($form->isValid()) {
-                $em = $this->app["orm.em"];
-                $em->persist($entity);
-                $em->flush();
-
+                $db->insert($table, $form->getData());
+                // return $this->app->redirect($this->app['url_generator']->generate(
+                //     $this->options['route'].'_show', array('id' => $entity->getId())
+                // ));
                 return $this->app->redirect($this->app['url_generator']->generate(
-                    $this->options['route'].'_show', array('id' => $entity->getId())
+                    $this->options['route']
                 ));
             }
         }
@@ -68,34 +70,39 @@ class CrudController
 
     public function showAction($id)
     {
-        $em = $this->app["orm.em"];
-
-        $entity = $em->getRepository('Entity'.$this->options['entityRepo'])->find($id);
+        $db = $this->app['db'];
+        $table = $this->options['table'];
+        $sql = "SELECT * FROM $table WHERE id = ?";
+        $entity = $db->fetchAssoc($sql, array((int) $id));
 
         if (!$entity) {
-            $this->app->abort(404, $this->options['entityName']." $id does not exist.");
+            $this->app->abort(404, $table." $id does not exist.");
         }
+
+        $show = configController::createList($this->options['table']);
 
         $deleteForm = $this->createDeleteForm($id);
 
         return $this->app['twig']->render($this->options['dirTemplate'].'show.html.twig', array(
             'entity'      => $entity,
             'delete_form' => $deleteForm->createView(),
-            'options' => $this->options
+            'options' => $this->options,
+            'campos' => $show
         ));
     }
 
     public function editAction($id)
     {
-        $em = $this->app["orm.em"];
-
-        $entity = $em->getRepository('Entity'.$this->options['entityRepo'])->find($id);
+        $db = $this->app['db'];
+        $table = $this->options['table'];
+        $sql = "SELECT * FROM $table WHERE id = ?";
+        $entity = $db->fetchAssoc($sql, array((int) $id));
 
         if (!$entity) {
-            $this->app->abort(404, $this->options['entityName']." $id does not exist.");
+            $this->app->abort(404, $table." $id does not exist.");
         }
 
-        $editForm = configController::createForm($this->options['table'], $this->app, $entity);
+        $editForm = configController::createForm($table, $this->app, $entity);
         $deleteForm = $this->createDeleteForm($id);
 
         return $this->app['twig']->render($this->options['dirTemplate'].'edit.html.twig', array(
@@ -108,21 +115,21 @@ class CrudController
 
     public function updateAction(Request $request, $id)
     {
-        $em = $this->app["orm.em"];
-
-        $entity = $em->getRepository('Entity'.$this->options['entityRepo'])->find($id);
+        $db = $this->app['db'];
+        $table = $this->options['table'];
+        $sql = "SELECT * FROM $table WHERE id = ?";
+        $entity = $db->fetchAssoc($sql, array((int) $id));
 
         if (!$entity) {
-            $this->app->abort(404, $this->options['entityName']." $id does not exist.");
+            $this->app->abort(404, $table." $id does not exist.");
         }
 
         $deleteForm = $this->createDeleteForm($id);
-        $editForm = configController::createForm($this->options['table'], $this->app, $entity);
+        $editForm = configController::createForm($table, $this->app, $entity);
         $editForm->bind($request);
 
         if ($editForm->isValid()) {
-            $em->persist($entity);
-            $em->flush();
+            $db->update($table, $editForm->getData(), array('id' => $id));
 
             return $this->app->redirect($this->app['url_generator']->generate(
                 $this->options['route'].'_edit', array('id' => $id)
@@ -143,15 +150,16 @@ class CrudController
         $form->bind($request);
 
         if ($form->isValid()) {
-            $em = $this->app["orm.em"];
-            $entity = $em->getRepository('Entity'.$this->options['entityRepo'])->find($id);
+            $db = $this->app['db'];
+            $table = $this->options['table'];
+            $sql = "SELECT * FROM $table WHERE id = ?";
+            $entity = $db->fetchAssoc($sql, array((int) $id));
 
             if (!$entity) {
-                $this->app->abort(404, $this->options['entityName']." $id does not exist.");
+                $this->app->abort(404, $this->options['table']." $id does not exist.");
             }
 
-            $em->remove($entity);
-            $em->flush();
+            $db->delete($table, array('id' => $id));
         }
 
         return $this->app->redirect($this->app['url_generator']->generate(

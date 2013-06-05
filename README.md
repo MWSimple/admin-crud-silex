@@ -63,8 +63,8 @@ Add it to the `src/controllers.php` class:
 	$app->post('/post/{id}', "post.controller:updateAction")->bind('post_update')
 	  ->method('PUT|POST')
 	;
-	$app->match('/post/{id}', "post.controller:deleteAction")->bind('post_delete')
-	  ->method('DELETE')
+	$app->delete('/post/{id}/delete', "post.controller:deleteAction")->bind('post_delete')
+	  ->method('POST')
 	;
 
 Add it to the `src/Controller/ConfigController.php` class:
@@ -103,6 +103,20 @@ Add it to the `src/Controller/ConfigController.php` class:
 	                break;
 	        }
 	        return $list;
+	    }
+
+	    static function createShow($table)
+	    {
+	        switch ($table) {
+	//post
+	            case 'post':
+	                $show = array('id','title','description', 'content');
+	                break;
+	            default:
+	                $show = array('id');
+	                break;
+	        }
+	        return $show;
 	    }
 	}
 

@@ -1,0 +1,39 @@
+{% extends "crudViews/layout.html.twig" %}
+
+{% block title %}
+{{ parent() }} - {{ 'views.show.show'|trans({ '%entity%': options.table }, 'MWSimpleAdminCrudSilex') }}
+{% endblock %}
+
+{% block page %}
+<div class="hero-unit">
+<!-- <div class="row" style="background-color:#FFFFFF;"> -->
+    <h2>{{ options.table }}</h2>
+
+    <table class="table">
+        <tbody>
+            {% for campo in campos %}
+                <th>{{ campo }}</th>
+                <td>{{ entity[campo] }}</td>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="span2">
+        <a href="{{ path(options.route) }}" class="btn">
+            Back to the list
+        </a>
+    </div>
+    <div class="span1">
+        <a href="{{ path(options.route ~ '_edit', { 'id': entity.id }) }}" class="btn btn-primary">
+            Edit
+        </a>
+    </div>
+    <div class="span1">
+        <form action="{{ path(options.route ~ '_delete', { 'id': entity.id }) }}" method="post">
+            <input type="hidden" name="_method" value="DELETE" />
+            {{ form_widget(delete_form) }}
+            <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
+    </div>
+<!-- </div> -->
+</div>
+{% endblock %}

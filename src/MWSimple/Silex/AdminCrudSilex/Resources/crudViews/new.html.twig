@@ -1,0 +1,24 @@
+{% extends "crudViews/layout.html.twig" %}
+
+{% block title %}
+{{ parent() }} - {{ 'views.new.creation'|trans({ '%entity%': options.table }, 'MWSimpleAdminCrudSilex') }}
+{% endblock %}
+
+{% block page %}
+<div class="hero-unit">
+    <h2>{{ options.table }} creation</h2>
+
+    <form action="{{ path(options.route ~ '_create') }}" method="post" {{ form_enctype(form) }}>
+        {{ form_widget(form) }}
+        <p>
+            <button type="submit" class="btn btn-success">Create</button>
+        </p>
+    </form>
+
+    <div class="span2">
+        <a href="{{ path(options.route) }}" class="btn">
+            Back to the list
+        </a>
+    </div>
+</div>
+{% endblock %}
