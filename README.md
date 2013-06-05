@@ -54,6 +54,12 @@ Add it to the `src/app.php` class:
 
 Add it to the `src/controllers.php` class:
 
+	...
+	use Symfony\Component\HttpFoundation\Request;
+
+	Request::enableHttpMethodParameterOverride();
+	...
+	...
 	//CONTROLLER POST
 	$app->get('/post', "post.controller:indexAction")->bind('post');
 	$app->post('/post/', "post.controller:createAction")->bind('post_create');
@@ -63,8 +69,8 @@ Add it to the `src/controllers.php` class:
 	$app->post('/post/{id}', "post.controller:updateAction")->bind('post_update')
 	  ->method('PUT|POST')
 	;
-	$app->delete('/post/{id}/delete', "post.controller:deleteAction")->bind('post_delete')
-	  ->method('POST')
+	$app->delete('/post/{id}', "post.controller:deleteAction")->bind('post_delete')
+	  ->method('DELETE')
 	;
 
 Add it to the `src/Controller/ConfigController.php` class:
