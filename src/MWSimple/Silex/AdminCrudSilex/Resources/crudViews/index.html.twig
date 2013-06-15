@@ -1,13 +1,13 @@
 {% extends "crudViews/layout.html.twig" %}
 
 {% block title %}
-{{ parent() }} - {{ 'views.index.list'|trans({ '%entity%': options.table }, 'MWSimpleAdminCrudSilex') }}
+{{ parent() }} - {{ app.translator.trans('views.index.list', { '%entity%': options.table }) }}
 {% endblock %}
 
 {% block page %}
 <div class="row">
     <div class="span8">
-        <h1>{{ 'views.index.list'|trans({'%entity%': options.table}, 'MWSimpleAdminCrudSilex') }}</h1>
+        <h1>{{ app.translator.trans('views.index.list', { '%entity%': options.table }) }}</h1>
     </div>
 
     <div class="span12">
@@ -17,7 +17,7 @@
               {% for campo in campos %}
                 <th>{{ campo }}</th>
               {% endfor %}
-                <th>Actions</th>
+                <th>{{ app.translator.trans('views.index.actions') }}</th>
             </tr>
         </thead>
             <tbody>
@@ -30,10 +30,14 @@
                     <div class="navbar">
                         <ul class="nav nav-pills">
                             <li>
-                                <a href="{{ path(options.route ~ '_show', { 'id': entity.id }) }}" class="btn btn-mini">show</a>
+                                <a href="{{ path(options.route ~ '_show', { 'id': entity.id }) }}" class="btn btn-mini">
+                                    {{ app.translator.trans('views.actions.show') }}
+                                </a>
                             </li>
                             <li>
-                                <a href="{{ path(options.route ~ '_edit', { 'id': entity.id }) }}" class="btn btn-mini">edit</a>
+                                <a href="{{ path(options.route ~ '_edit', { 'id': entity.id }) }}" class="btn btn-mini">
+                                    {{ app.translator.trans('views.actions.edit') }}
+                                </a>
                             </li>
                         </ul>
                     </div>
@@ -46,7 +50,7 @@
 
         <div class="span8">
         <a class="btn btn-primary likepaginator" href="{{ path(options.route ~ '_new') }}">
-            {{ 'views.index.createnew'|trans({}, 'MWSimpleAdminCrudSilex') }} Item
+            {{ app.translator.trans('views.index.createnew', { '%entity%': options.table }) }}
         </a>
     </div>
     </div>

@@ -1,13 +1,12 @@
 {% extends "crudViews/layout.html.twig" %}
 
 {% block title %}
-{{ parent() }} - {{ 'views.show.show'|trans({ '%entity%': options.table }, 'MWSimpleAdminCrudSilex') }}
+{{ parent() }} - {{ app.translator.trans('views.show.show', { '%entity%': options.table }) }}
 {% endblock %}
 
 {% block page %}
 <div class="hero-unit">
-<!-- <div class="row" style="background-color:#FFFFFF;"> -->
-    <h2>{{ options.table }}</h2>
+    <h2>{{ app.translator.trans('views.show.show', { '%entity%': options.table }) }}</h2>
 
     <table class="table">
         <tbody>
@@ -19,21 +18,20 @@
     </table>
     <div class="span2">
         <a href="{{ path(options.route) }}" class="btn">
-            Back to the list
+            {{ app.translator.trans('views.recordactions.backtothelist') }}
         </a>
     </div>
     <div class="span1">
         <a href="{{ path(options.route ~ '_edit', { 'id': entity.id }) }}" class="btn btn-primary">
-            Edit
+            {{ app.translator.trans('views.recordactions.edit') }}
         </a>
     </div>
     <div class="span1">
         <form action="{{ path(options.route ~ '_delete', { 'id': entity.id }) }}" method="post">
             <input type="hidden" name="_method" value="DELETE" />
             {{ form_widget(delete_form) }}
-            <button type="submit" class="btn btn-danger" onclick="return confirm('{{ 'views.recordactions.confirm'|trans({}, 'MWSimpleCrudGeneratorBundle') }}');">Delete</button>
+            <button type="submit" class="btn btn-danger" onclick="return confirm('{{ app.translator.trans('views.recordactions.confirm') }}');">{{ app.translator.trans('views.recordactions.delete') }}</button>
         </form>
     </div>
-<!-- </div> -->
 </div>
 {% endblock %}

@@ -1,23 +1,23 @@
 {% extends "crudViews/layout.html.twig" %}
 
 {% block title %}
-{{ parent() }} - {{ 'views.new.creation'|trans({ '%entity%': options.table }, 'MWSimpleAdminCrudSilex') }}
+{{ parent() }} - {{ app.translator.trans('views.new.creation', { '%entity%': options.table }) }}
 {% endblock %}
 
 {% block page %}
 <div class="hero-unit">
-    <h2>{{ options.table }} creation</h2>
+    <h2>{{ app.translator.trans('views.new.creation', { '%entity%': options.table }) }}</h2>
 
     <form action="{{ path(options.route ~ '_create') }}" method="post" {{ form_enctype(form) }}>
         {{ form_widget(form) }}
         <p>
-            <button type="submit" class="btn btn-success">Create</button>
+            <button type="submit" class="btn btn-success">{{ app.translator.trans('views.new.create') }}</button>
         </p>
     </form>
 
     <div class="span2">
         <a href="{{ path(options.route) }}" class="btn">
-            Back to the list
+            {{ app.translator.trans('views.recordactions.backtothelist') }}
         </a>
     </div>
 </div>

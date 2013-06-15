@@ -2,6 +2,7 @@
 namespace MWSimple\Silex\AdminCrudSilex;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Translation\Loader\YamlFileLoader;
 use Controller\ConfigController as configController;
 
 class CrudController
@@ -14,6 +15,16 @@ class CrudController
     {
         $this->app = $app;
         $this->options = $options;
+
+        $this->app['translator'] = $this->app->share($this->app->extend('translator', function($translator, $app) {
+            $translator->addLoader('yaml', new YamlFileLoader());
+
+            $translator->addResource('yaml', __DIR__.'/Resources/translations/MWSimpleCrudGeneratorBundle.en.yml', 'en');
+            $translator->addResource('yaml', __DIR__.'/Resources/translations/MWSimpleCrudGeneratorBundle.es.yml', 'es');
+            $translator->addResource('yaml', __DIR__.'/Resources/translations/MWSimpleCrudGeneratorBundle.ca.yml', 'ca');
+
+            return $translator;
+        }));
     }
 
     public function indexAction()

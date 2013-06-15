@@ -40,7 +40,18 @@ Add it to the `src/app.php` class:
 
 	use Silex\Application;
 	...
+	use Silex\Provider\SessionServiceProvider;
+	use Silex\Provider\FormServiceProvider;
+	use Silex\Provider\TranslationServiceProvider;
     use Controller\PostController;
+    ...
+    $app->register(new SessionServiceProvider());
+    $app->register(new FormServiceProvider());
+	$app->register(new TranslationServiceProvider(), array(
+	    'locale' => 'en',
+	    'translation.class_path' =>  __DIR__ . '/../vendor/symfony/src',
+	    'translator.messages' => array()
+	));
     ...
     //CONTROLLER POST
 	$app['post.controller'] = $app->share(function() use ($app) {
