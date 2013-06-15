@@ -53,6 +53,7 @@ class CrudController
 
             if ($form->isValid()) {
                 $db->insert($table, $form->getData());
+                $this->app['session']->getFlashBag()->add('success', 'flash.create.success');
                 // return $this->app->redirect($this->app['url_generator']->generate(
                 //     $this->options['route'].'_show', array('id' => $entity->getId())
                 // ));
@@ -60,6 +61,7 @@ class CrudController
                     $this->options['route']
                 ));
             }
+            $this->app['session']->getFlashBag()->add('success', 'flash.create.error');
         }
         // display the form
         return $this->app['twig']->render($this->options['dirTemplate'].'new.html.twig', array(
@@ -130,11 +132,13 @@ class CrudController
 
         if ($editForm->isValid()) {
             $db->update($table, $editForm->getData(), array('id' => $id));
+            $this->app['session']->getFlashBag()->add('success', 'flash.update.success');
 
             return $this->app->redirect($this->app['url_generator']->generate(
                 $this->options['route'].'_edit', array('id' => $id)
             ));
         }
+        $this->app['session']->getFlashBag()->add('success', 'flash.update.error');
 
         return $this->app['twig']->render($this->options['dirTemplate'].'edit.html.twig', array(
             'entity'      => $entity,
@@ -160,6 +164,7 @@ class CrudController
             }
 
             $db->delete($table, array('id' => $id));
+            $this->app['session']->getFlashBag()->add('success', 'flash.delete.success');
         }
 
         return $this->app->redirect($this->app['url_generator']->generate(

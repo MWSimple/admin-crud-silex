@@ -25,7 +25,7 @@
         <form action="{{ path(options.route ~ '_delete', { 'id': entity.id }) }}" method="post">
             <input type="hidden" name="_method" value="DELETE" />
             {{ form_widget(delete_form) }}
-            <button type="submit" class="btn btn-danger">Delete</button>
+            <button type="submit" class="btn btn-danger" onclick="return confirm('{{ 'views.recordactions.confirm'|trans({}, 'MWSimpleCrudGeneratorBundle') }}');">Delete</button>
         </form>
     </div>
 </div>
